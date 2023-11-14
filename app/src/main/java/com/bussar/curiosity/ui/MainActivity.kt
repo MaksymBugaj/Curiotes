@@ -25,20 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CuriosityTheme {
-                MainNavigation()
             }
         }
-    }
-}
-
-@Composable
-fun MainNavigation() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "curioes") {
-        composable(route = "curioes") {
-            CuriousNotesView(viewModel = hiltViewModel())
-        }
-
-
     }
 }
