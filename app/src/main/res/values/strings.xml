@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Curiosity</string>
     <string name="curiote">Curiote</string>
-    <string name="createCurioteCheckLaterLabel">Mark For future extended description</string>
+    <string name="createCurioteCheckLaterLabel">Mark for future extended description</string>
     <string name="link">Link</string>
     <string name="descriptionLabel">Description</string>
     <string name="titleLabel">Title</string>
