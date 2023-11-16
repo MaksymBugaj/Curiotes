@@ -112,7 +112,7 @@ class CuriousNotesViewModel @Inject constructor(
             title = _noteTitle.value,
             note = _noteDescription.value,
             createdAt = ZonedDateTime.now(),
-            modifiedAt = null,
+            modifiedAt = ZonedDateTime.now(),
             links = listOf(links),
             toCheck = _needsDetailedExplanation.value
         )
