@@ -19,8 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CuriousNotesViewModel @Inject constructor(
     private val selectCuriousNotesUseCase: SelectCuriousNotesUseCase,
-    private val saveCuriousNoteUseCase: SaveCuriousNoteUseCase
-): ViewModel() {
+    private val saveCuriousNoteUseCase: SaveCuriousNoteUseCase,
+) : ViewModel() {
 
     private val _isSheetOpen = MutableStateFlow(false)
     val isSheetOpen: StateFlow<Boolean> = _isSheetOpen
@@ -35,7 +35,7 @@ class CuriousNotesViewModel @Inject constructor(
     val noteLink: StateFlow<String> = _noteLink
 
     private val _needsDetailedExplanation = MutableStateFlow(false)
-    val needsDetailedExplanation :StateFlow<Boolean> = _needsDetailedExplanation
+    val needsDetailedExplanation: StateFlow<Boolean> = _needsDetailedExplanation
 
     //todo use combine maybe?
     private val _showSavingError = MutableStateFlow(false)
@@ -76,7 +76,7 @@ class CuriousNotesViewModel @Inject constructor(
     // end Region SET
 
     //Region SELECT
-    private fun selectAllCuriousNotes(){
+    private fun selectAllCuriousNotes() {
         Log.d("#NOPE", "Getting curiotes:")
         viewModelScope.launch {
             selectCuriousNotesUseCase.execute(Unit).onEach { curiousNotes ->
@@ -89,20 +89,20 @@ class CuriousNotesViewModel @Inject constructor(
     //Region SAVE
 
     fun saveClicked() {
-        if(validate()){
+        if (validate()) {
             save()
         } else {
             _showSavingError.value = true
         }
     }
 
-    private fun validate(): Boolean{
+    private fun validate(): Boolean {
         return _noteTitle.value.isNotEmpty() ||
                 _noteDescription.value.isNotEmpty() ||
                 noteLink.value.isNotEmpty()
     }
 
-    private fun save(){
+    private fun save() {
         val links = CuriousNoteLink(
             id = 0,
             link = _noteLink.value
@@ -127,7 +127,7 @@ class CuriousNotesViewModel @Inject constructor(
 
     //END REGION SAVE
 
-    private fun clearFields(){
+    private fun clearFields() {
         setNoteTitle("")
         setNoteDescription("")
         setNoteLink("")
