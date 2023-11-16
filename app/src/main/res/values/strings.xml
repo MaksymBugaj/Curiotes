@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Curiosity</string>
     <string name="curiote">Curiote</string>
+    <string name="createCurioteCheckLaterLabel">Mark for future extended description</string>
+    <string name="link">Link</string>
+    <string name="descriptionLabel">Description</string>
+    <string name="titleLabel">Title</string>
+    <string name="createCurioteTitle">Create Curiote!</string>
+    <string name="errorToastMinimumField">At Least one field required!</string>
+    <string name="curiotesList">Curiotes:</string>
 </resources>

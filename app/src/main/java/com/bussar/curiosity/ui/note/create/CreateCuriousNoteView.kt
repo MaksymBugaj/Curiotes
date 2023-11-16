@@ -27,8 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bussar.curiosity.R
 import com.bussar.curiosity.ui.theme.Dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,26 +51,26 @@ fun CreateCuriousNote(
             CreateCuriousNoteContent(
                 viewModel = viewModel,
                 showError = showSavingError
-                )
+            )
         }
 }
 
 @Composable
 fun ErrorToast(
-    textValue: String = "At Least one field required!"
+    textValue: String = stringResource(id = R.string.errorToastMinimumField),
 ) {
     Text(
         text = textValue.uppercase(),
         modifier = Modifier,
         color = Color.Red,
 
-    )
+        )
 }
 
 @Composable
 fun CreateCuriousNoteContent(
     viewModel: CuriousNotesViewModel,
-    showError: Boolean
+    showError: Boolean,
 ) {
     val noteTitle by viewModel.noteTitle.collectAsStateWithLifecycle()
     val noteDescription by viewModel.noteDescription.collectAsStateWithLifecycle()
@@ -86,21 +88,21 @@ fun CreateCuriousNoteContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Create Curiote!")
+            Text(text = stringResource(id = R.string.createCurioteTitle))
             IconButton(onClick = {
                 viewModel.saveClicked()
             }) {
                 Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
             }
         }
-        if(showError) ErrorToast()
+        if (showError) ErrorToast()
         OutlinedTextField(
             value = noteTitle,
             onValueChange = viewModel::setNoteTitle,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = Dimens.Padding.paddingDefault),
-            label = { Text(text = "Title")}
+            label = { Text(text = stringResource(id = R.string.titleLabel)) }
         )
         OutlinedTextField(
             value = noteDescription,
@@ -108,7 +110,7 @@ fun CreateCuriousNoteContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Dimens.Padding.paddingDefault),
-            label = { Text(text = "Description")}
+            label = { Text(text = stringResource(id = R.string.descriptionLabel)) }
         )
         OutlinedTextField(
             value = noteLink,
@@ -116,16 +118,16 @@ fun CreateCuriousNoteContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Dimens.Padding.paddingDefault),
-            label = { Text(text = "Link")}
+            label = { Text(text = stringResource(id = R.string.link)) }
         )
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = Dimens.Padding.paddingDefault),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(text = "Mark For future extended description")
+        ) {
+            Text(text = stringResource(id = R.string.createCurioteCheckLaterLabel))
             Switch(
                 checked = needsDetails,
                 onCheckedChange = viewModel::setDetailedExplanation,
@@ -143,9 +145,6 @@ fun CreateCuriousNoteContent(
                 }
             )
         }
-
-
-
         Spacer(modifier = Modifier.height(Dimens.Padding.paddingXLarge))
     }
 }
