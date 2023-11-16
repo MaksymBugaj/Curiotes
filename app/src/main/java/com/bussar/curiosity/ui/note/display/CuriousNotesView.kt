@@ -33,6 +33,8 @@ fun CuriousNotesView(
 ) {
     val curiotes by viewModel.notes.collectAsStateWithLifecycle()
 
+    val paddingDefault = Dimens.Padding.paddingDefault
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -49,9 +51,9 @@ fun CuriousNotesView(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = 8.dp,
-                    end = 8.dp,
-                    start = 8.dp,
+                    top = paddingDefault,
+                    end = paddingDefault,
+                    start = paddingDefault,
                     bottom = paddingValues.calculateBottomPadding()
                 )
         ) {
