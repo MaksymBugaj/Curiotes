@@ -3,21 +3,26 @@ package com.bussar.curiosity.ui.note.display
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bussar.curiosity.R
@@ -70,10 +75,39 @@ fun CuriousNotesView(
 
 @Composable
 fun CuriousNoteItem(curiousNote: CuriousNote) {
-    Card() {
-        Column(modifier = Modifier.padding(Dimens.Padding.paddingDefault)) {
-            curiousNote.title?.let { Text(text = curiousNote.title) }
-            curiousNote.note?.let { Text(text = curiousNote.note) }
+    Card(modifier = Modifier.padding(4.dp)) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(Dimens.Padding.paddingDefault)
+        ) {
+            curiousNote.title?.let {
+                Text(
+                    text = curiousNote.title,
+                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+            curiousNote.note?.let {
+                Text(
+                    text = curiousNote.note,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
+                    )
+            }
+            curiousNote.modifiedAt?.let {
+                Text(
+                    text = curiousNote.modifiedAt.toString(),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End
+                )
+            }
             //curiousNote.links?.isNotEmpty()?.let { Text(text = curiousNote.links.first().link) }
         }
     }
