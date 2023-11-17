@@ -9,9 +9,12 @@ import com.bussar.curiosity.domain.usecase.SaveCuriousNoteUseCase
 import com.bussar.curiosity.domain.usecase.SelectCuriousNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import javax.inject.Inject
@@ -44,6 +47,12 @@ class CuriousNotesViewModel @Inject constructor(
     private val _notes = MutableStateFlow<List<CuriousNote>>(emptyList())
     val notes: StateFlow<List<CuriousNote>> = _notes
 
+     val showCreateErrorTest = combine(
+        _noteDescription, _noteLink, _noteTitle, _showSavingError
+    ) { p1, p2,p3, p4 ->
+         if(!showSavingError.value) false
+        else p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(300), false)
     init {
         selectAllCuriousNotes()
     }
@@ -77,10 +86,8 @@ class CuriousNotesViewModel @Inject constructor(
 
     //Region SELECT
     private fun selectAllCuriousNotes() {
-        Log.d("#NOPE", "Getting curiotes:")
         viewModelScope.launch {
             selectCuriousNotesUseCase.execute(Unit).onEach { curiousNotes ->
-                Log.d("#NOPE", "setting curiotes: $curiousNotes")
                 _notes.value = curiousNotes
             }.collect()
         }

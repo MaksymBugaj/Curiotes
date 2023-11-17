@@ -40,7 +40,7 @@ fun CreateCuriousNote(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val isSheetOpen by viewModel.isSheetOpen.collectAsStateWithLifecycle()
-    val showSavingError by viewModel.showSavingError.collectAsStateWithLifecycle()
+    val showSavingError by viewModel.showCreateErrorTest.collectAsStateWithLifecycle(initialValue = false)
 
     if (isSheetOpen)
         ModalBottomSheet(

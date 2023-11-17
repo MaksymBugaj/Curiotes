@@ -35,13 +35,11 @@ class CuriousNoteRepositoryImpl @Inject constructor(
     }
 
     override fun selectNotes(): Flow<List<CuriousNote>> {
-        Log.d("#NOPE", "select notes:")
         val test = curiousNoteDao.selectNotes().map { curiotes ->
             curiotes.map { curiote ->
                 curiousNoteMapper.mapToDomain(curiote)
             }
         }
-        Log.d("#NOPE","transformed: $test")
         return test
 //        return curiousNoteDao.selectAll().map {
 //            Log.d("#NOPE", "mapping curiotes:")
