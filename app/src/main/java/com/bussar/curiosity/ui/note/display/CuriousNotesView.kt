@@ -30,6 +30,8 @@ import com.bussar.curiosity.domain.model.CuriousNote
 import com.bussar.curiosity.ui.note.create.CreateCuriousNote
 import com.bussar.curiosity.ui.note.create.CuriousNotesViewModel
 import com.bussar.curiosity.ui.theme.Dimens
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -101,7 +103,7 @@ fun CuriousNoteItem(curiousNote: CuriousNote) {
             }
             curiousNote.modifiedAt?.let {
                 Text(
-                    text = curiousNote.modifiedAt.toString(),
+                    text = curiousNote.modifiedAt.toFullDateString(),
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxWidth(),
@@ -111,4 +113,9 @@ fun CuriousNoteItem(curiousNote: CuriousNote) {
             //curiousNote.links?.isNotEmpty()?.let { Text(text = curiousNote.links.first().link) }
         }
     }
+}
+
+fun ZonedDateTime.toFullDateString() : String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    return this.format(formatter)
 }
