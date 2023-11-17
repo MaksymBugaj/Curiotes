@@ -21,8 +21,10 @@ class MainActivity : ComponentActivity() {
 /**
  * plan for the app:
  * fix date to yyyy-MM-dd-hh:mm +
- * when creating a curiote, if an error is shown, then after filling any field error is dismantled
- * add checkmark on item indicationg that this field is required to be extended
+ * when creating a curiote, if an error is shown, then after filling any field error is dismantled +
+ * add checkmark on item indicationg that this field is required to be extended +
+ * sticky header need to have a background
+ * floating action button needs to have a space
  * filters and sorting
  * search bar
  * opening note on click (okno takie jak msg się otwiera okno w oknie, i tam przycisk edytuj)

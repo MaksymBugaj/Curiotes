@@ -138,5 +138,6 @@ class CuriousNotesViewModel @Inject constructor(
         setNoteTitle("")
         setNoteDescription("")
         setNoteLink("")
+        setDetailedExplanation(value = false)
     }
 }

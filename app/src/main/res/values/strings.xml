@@ -8,4 +8,5 @@
     <string name="createCurioteTitle">Create Curiote!</string>
     <string name="errorToastMinimumField">At Least one field required!</string>
     <string name="curiotesList">Curiotes:</string>
+    <string name="checkLater">This field needs to be extended</string>
 </resources>
