@@ -52,7 +52,7 @@ class CuriousNoteRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             curiousNoteDao.update(curiousNoteMapper.mapToData(curiousNote))
             val links = curiousNote.links?.map { curiousNoteLinkMapper.mapToData(it, curiousNote.id) }
-            links?.let { curiousNoteLinkDao.update(it)}
+            links?.let { curiousNoteLinkDao.insert(it)}
         }
     }
 }

@@ -6,6 +6,7 @@ import com.bussar.curiosity.domain.model.CuriousNote
 import com.bussar.curiosity.domain.model.CuriousNoteLink
 import com.bussar.curiosity.domain.usecase.SaveCuriousNoteUseCase
 import com.bussar.curiosity.domain.usecase.SelectCuriousNotesUseCase
+import com.bussar.curiosity.domain.usecase.UpdateCuriousNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,13 +17,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class CuriousNotesViewModel @Inject constructor(
     private val selectCuriousNotesUseCase: SelectCuriousNotesUseCase,
     private val saveCuriousNoteUseCase: SaveCuriousNoteUseCase,
+    private val updateCuriousNoteUseCase: UpdateCuriousNoteUseCase,
 ) : ViewModel() {
 
     private val _isSheetOpen = MutableStateFlow(false)
@@ -48,7 +49,7 @@ class CuriousNotesViewModel @Inject constructor(
     val notes: StateFlow<List<CuriousNote>> = _notes
 
     private val _isUpdating = MutableStateFlow(false)
-    val isUpdating : StateFlow<Boolean> = _isUpdating
+    private var updatingCuriote: CuriousNote? = null
 
      val showCreateErrorTest = combine(
         _noteDescription, _noteLink, _noteTitle, _showSavingError
@@ -89,6 +90,9 @@ class CuriousNotesViewModel @Inject constructor(
         _isUpdating.value = value
     }
 
+    fun setUpdatingCuriote(value: CuriousNote){
+        updatingCuriote = value
+    }
     // end Region SET
 
     //Region SELECT
@@ -104,7 +108,12 @@ class CuriousNotesViewModel @Inject constructor(
 
     fun saveClicked() {
         if (validate()) {
-            save()
+            if(_isUpdating.value){
+                updateCuriote(updatingCuriote!!)
+            } else {
+                save()
+            }
+
         } else {
             _showSavingError.value = true
         }
@@ -117,17 +126,20 @@ class CuriousNotesViewModel @Inject constructor(
     }
 
     private fun save() {
-        val links = CuriousNoteLink(
-            id = 0,
-            link = _noteLink.value
-        )
+
+        val links = if(_noteLink.value.isNotBlank()) {
+            listOf(CuriousNoteLink(
+                id = 0,
+                link = _noteLink.value
+            ))
+        } else emptyList<CuriousNoteLink>()
         val curiousNote = CuriousNote(
             id = 0,
             title = _noteTitle.value,
             note = _noteDescription.value,
             createdAt = ZonedDateTime.now(),
             modifiedAt = ZonedDateTime.now(),
-            links = listOf(links),
+            links = links,
             toCheck = _needsDetailedExplanation.value
         )
         viewModelScope.launch {
@@ -137,23 +149,39 @@ class CuriousNotesViewModel @Inject constructor(
         clearFields()
     }
 
-    fun edit(curiousNote: CuriousNote){
-        val links = CuriousNoteLink(
-            id = curiousNote.links.firstOrNull(),
-            link = _noteLink.value
-        )
+    private fun updateCuriote(curiousNote: CuriousNote){
+        val links = if(_noteLink.value.isNotEmpty() && curiousNote.links.isNullOrEmpty()){
+            listOf(
+                CuriousNoteLink(
+                id = 0,
+                link = _noteLink.value
+                )
+            )
+        } else if (!curiousNote.links.isNullOrEmpty()){
+            listOf(
+                CuriousNoteLink(
+                    id = curiousNote.links.first().id,
+                    link = _noteLink.value
+                )
+            )
+        } else {
+            emptyList()
+        }
+
         val note = CuriousNote(
-            id = 0,
+            id = curiousNote.id,
             title = _noteTitle.value,
             note = _noteDescription.value,
-            createdAt = ZonedDateTime.now(),
+            createdAt = curiousNote.createdAt,
             modifiedAt = ZonedDateTime.now(),
-            links = listOf(links),
+            links = links,
             toCheck = _needsDetailedExplanation.value
         )
         viewModelScope.launch {
-            saveCuriousNoteUseCase.execute(curiousNote)
+            updateCuriousNoteUseCase.execute(note)
         }
+        selectAllCuriousNotes()
+        clearFields()
     }
 
     //END REGION SAVE
@@ -170,8 +198,10 @@ class CuriousNotesViewModel @Inject constructor(
     // REGION EDIT CURIOTE
 
     fun editCuriote(curiousNote: CuriousNote) {
+        setUpdatingCuriote(curiousNote)
         setSheetValue(true)
         setIsUpdating(true)
+        setDetailedExplanation(curiousNote.toCheck)
         curiousNote.title?.let { title -> setNoteTitle(title) }
         curiousNote.note?.let { note -> setNoteDescription(note) }
         curiousNote.links?.let { links -> links.firstOrNull()?.let { curiousNoteLink -> setNoteLink(curiousNoteLink.link)} }
