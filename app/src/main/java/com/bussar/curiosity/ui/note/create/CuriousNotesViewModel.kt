@@ -1,6 +1,5 @@
 package com.bussar.curiosity.ui.note.create
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bussar.curiosity.domain.model.CuriousNote
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,6 +46,9 @@ class CuriousNotesViewModel @Inject constructor(
 
     private val _notes = MutableStateFlow<List<CuriousNote>>(emptyList())
     val notes: StateFlow<List<CuriousNote>> = _notes
+
+    private val _isUpdating = MutableStateFlow(false)
+    val isUpdating : StateFlow<Boolean> = _isUpdating
 
      val showCreateErrorTest = combine(
         _noteDescription, _noteLink, _noteTitle, _showSavingError
@@ -80,6 +83,10 @@ class CuriousNotesViewModel @Inject constructor(
 
     private fun setShowSavingErrorValue(value: Boolean) {
         _showSavingError.value = value
+    }
+
+    fun setIsUpdating(value: Boolean) {
+        _isUpdating.value = value
     }
 
     // end Region SET
@@ -126,10 +133,27 @@ class CuriousNotesViewModel @Inject constructor(
         viewModelScope.launch {
             saveCuriousNoteUseCase.execute(curiousNote)
         }
-        setSheetValue(false)
-        setShowSavingErrorValue(false)
         selectAllCuriousNotes()
         clearFields()
+    }
+
+    fun edit(curiousNote: CuriousNote){
+        val links = CuriousNoteLink(
+            id = curiousNote.links.firstOrNull(),
+            link = _noteLink.value
+        )
+        val note = CuriousNote(
+            id = 0,
+            title = _noteTitle.value,
+            note = _noteDescription.value,
+            createdAt = ZonedDateTime.now(),
+            modifiedAt = ZonedDateTime.now(),
+            links = listOf(links),
+            toCheck = _needsDetailedExplanation.value
+        )
+        viewModelScope.launch {
+            saveCuriousNoteUseCase.execute(curiousNote)
+        }
     }
 
     //END REGION SAVE
@@ -138,5 +162,18 @@ class CuriousNotesViewModel @Inject constructor(
         setNoteTitle("")
         setNoteDescription("")
         setNoteLink("")
+        setIsUpdating(false)
+        setSheetValue(false)
+        setShowSavingErrorValue(false)
+    }
+
+    // REGION EDIT CURIOTE
+
+    fun editCuriote(curiousNote: CuriousNote) {
+        setSheetValue(true)
+        setIsUpdating(true)
+        curiousNote.title?.let { title -> setNoteTitle(title) }
+        curiousNote.note?.let { note -> setNoteDescription(note) }
+        curiousNote.links?.let { links -> links.firstOrNull()?.let { curiousNoteLink -> setNoteLink(curiousNoteLink.link)} }
     }
 }

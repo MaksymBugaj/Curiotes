@@ -1,6 +1,7 @@
 package com.bussar.curiosity.ui.note.display
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -67,8 +67,13 @@ fun CuriousNotesView(
             stickyHeader {
                 Text(text = stringResource(id = R.string.curiotesList))
             }
-            items(curiotes) { item: CuriousNote ->
-                CuriousNoteItem(curiousNote = item)
+            items(
+                items = curiotes,
+                key = {
+                    it.id
+                }
+            ) { item: CuriousNote ->
+                CuriousNoteItem(curiousNote = item, onCurioteClick = viewModel::editCuriote)
             }
         }
     }
@@ -76,8 +81,11 @@ fun CuriousNotesView(
 }
 
 @Composable
-fun CuriousNoteItem(curiousNote: CuriousNote) {
-    Card(modifier = Modifier.padding(4.dp)) {
+fun CuriousNoteItem(
+    curiousNote: CuriousNote,
+    onCurioteClick: (curiote: CuriousNote) -> Unit,
+) {
+    Card(modifier = Modifier.padding(4.dp).clickable { onCurioteClick(curiousNote) }) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
