@@ -1,5 +1,6 @@
 package com.bussar.curiosity.ui.note.display
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -85,7 +86,9 @@ fun CuriousNoteItem(
     curiousNote: CuriousNote,
     onCurioteClick: (curiote: CuriousNote) -> Unit,
 ) {
-    Card(modifier = Modifier.padding(4.dp).clickable { onCurioteClick(curiousNote) }) {
+    Card(modifier = Modifier
+        .padding(4.dp)
+        .clickable { onCurioteClick(curiousNote) }) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -118,11 +121,20 @@ fun CuriousNoteItem(
                     textAlign = TextAlign.End
                 )
             }
-            //curiousNote.links?.isNotEmpty()?.let { Text(text = curiousNote.links.first().link) }
+
+            if(!curiousNote.links.isNullOrEmpty())  {
+                curiousNote.links.map { link ->
+                    Text(
+                        text = link.link,
+                        modifier = Modifier.padding(Dimens.Padding.paddingDefault)
+                    )
+                }
+            }
         }
     }
 }
 
+//todo move to utils
 fun ZonedDateTime.toFullDateString() : String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
     return this.format(formatter)

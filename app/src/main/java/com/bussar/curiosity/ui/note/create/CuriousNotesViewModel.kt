@@ -1,5 +1,6 @@
 package com.bussar.curiosity.ui.note.create
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bussar.curiosity.domain.model.CuriousNote
@@ -133,6 +134,8 @@ class CuriousNotesViewModel @Inject constructor(
                 link = _noteLink.value
             ))
         } else emptyList<CuriousNoteLink>()
+        //todo delete
+        Log.d("#NOPE","link to save: $links")
         val curiousNote = CuriousNote(
             id = 0,
             title = _noteTitle.value,
