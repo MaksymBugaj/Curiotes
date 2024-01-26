@@ -21,14 +21,13 @@ import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class CuriousNotesViewModel @Inject constructor(
+class CreateCuriousNotesViewModel @Inject constructor(
     private val selectCuriousNotesUseCase: SelectCuriousNotesUseCase,
     private val saveCuriousNoteUseCase: SaveCuriousNoteUseCase,
     private val updateCuriousNoteUseCase: UpdateCuriousNoteUseCase,
 ) : ViewModel() {
 
-    private val _isSheetOpen = MutableStateFlow(false)
-    val isSheetOpen: StateFlow<Boolean> = _isSheetOpen
+    //todo change to multiple viewModels
 
     private val _noteTitle = MutableStateFlow("")
     val noteTitle: StateFlow<String> = _noteTitle
@@ -127,7 +126,6 @@ class CuriousNotesViewModel @Inject constructor(
     }
 
     private fun save() {
-
         val links = if(_noteLink.value.isNotBlank()) {
             listOf(CuriousNoteLink(
                 id = 0,
