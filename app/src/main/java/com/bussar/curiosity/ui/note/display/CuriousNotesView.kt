@@ -1,11 +1,11 @@
 package com.bussar.curiosity.ui.note.display
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -70,11 +68,13 @@ fun CuriousNotesView(
             stickyHeader {
                 Text(text = stringResource(id = R.string.curiotesList))
             }
-            items(curiotes) { item: CuriousNote ->
-                CuriousNoteItem(curiousNote = item)
-            }
-            item {
-                Spacer(modifier = Modifier.height(Dimens.Padding.paddingDefault))
+            items(
+                items = curiotes,
+                key = {
+                    it.id
+                }
+            ) { item: CuriousNote ->
+                CuriousNoteItem(curiousNote = item, onCurioteClick = viewModel::editCuriote)
             }
         }
     }
@@ -82,8 +82,13 @@ fun CuriousNotesView(
 }
 
 @Composable
-fun CuriousNoteItem(curiousNote: CuriousNote) {
-    Card(modifier = Modifier.padding(4.dp)) {
+fun CuriousNoteItem(
+    curiousNote: CuriousNote,
+    onCurioteClick: (curiote: CuriousNote) -> Unit,
+) {
+    Card(modifier = Modifier
+        .padding(4.dp)
+        .clickable { onCurioteClick(curiousNote) }) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -116,20 +121,20 @@ fun CuriousNoteItem(curiousNote: CuriousNote) {
                     textAlign = TextAlign.End
                 )
             }
-            if(curiousNote.toCheck){
-                Text(
-                    text = stringResource(id = R.string.checkLater).uppercase(),
-                    fontSize = MaterialTheme.typography.labelSmall.fontSize,
-                    color = Color.Red,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End
-                )
+
+            if(!curiousNote.links.isNullOrEmpty())  {
+                curiousNote.links.map { link ->
+                    Text(
+                        text = link.link,
+                        modifier = Modifier.padding(Dimens.Padding.paddingDefault)
+                    )
+                }
             }
-            //curiousNote.links?.isNotEmpty()?.let { Text(text = curiousNote.links.first().link) }
         }
     }
 }
 
+//todo move to utils
 fun ZonedDateTime.toFullDateString() : String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
     return this.format(formatter)
