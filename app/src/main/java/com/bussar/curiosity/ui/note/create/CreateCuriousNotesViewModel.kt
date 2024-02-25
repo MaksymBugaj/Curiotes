@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateCuriousNotesViewModel @Inject constructor(
-    private val selectCuriousNotesUseCase: SelectCuriousNotesUseCase,
     private val saveCuriousNoteUseCase: SaveCuriousNoteUseCase,
     private val updateCuriousNoteUseCase: UpdateCuriousNoteUseCase,
 ) : ViewModel() {
@@ -45,9 +44,6 @@ class CreateCuriousNotesViewModel @Inject constructor(
     private val _showSavingError = MutableStateFlow(false)
     val showSavingError: StateFlow<Boolean> = _showSavingError
 
-    private val _notes = MutableStateFlow<List<CuriousNote>>(emptyList())
-    val notes: StateFlow<List<CuriousNote>> = _notes
-
     private val _isUpdating = MutableStateFlow(false)
     private var updatingCuriote: CuriousNote? = null
 
@@ -55,16 +51,16 @@ class CreateCuriousNotesViewModel @Inject constructor(
         _noteDescription, _noteLink, _noteTitle, _showSavingError
     ) { p1, p2,p3, p4 ->
          if(!showSavingError.value) false
-        else p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4
+         else p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(300), false)
-    init {
-        selectAllCuriousNotes()
-    }
+
+    val enableSaveButton = combine(
+        _noteDescription, _noteLink, _noteTitle
+    ) { p1, p2, p3 ->
+        p1.isNotEmpty() || p2.isNotEmpty() || p3.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(300),false)
 
     //region SET
-    fun setSheetValue(value: Boolean) {
-        _isSheetOpen.value = value
-    }
 
     fun setNoteTitle(value: String) {
         _noteTitle.value = value
@@ -95,15 +91,6 @@ class CreateCuriousNotesViewModel @Inject constructor(
     }
     // end Region SET
 
-    //Region SELECT
-    private fun selectAllCuriousNotes() {
-        viewModelScope.launch {
-            selectCuriousNotesUseCase.execute(Unit).onEach { curiousNotes ->
-                _notes.value = curiousNotes
-            }.collect()
-        }
-    }
-    //end Region SELECT
     //Region SAVE
 
     fun saveClicked() {
@@ -146,7 +133,6 @@ class CreateCuriousNotesViewModel @Inject constructor(
         viewModelScope.launch {
             saveCuriousNoteUseCase.execute(curiousNote)
         }
-        selectAllCuriousNotes()
         clearFields()
     }
 
@@ -181,7 +167,6 @@ class CreateCuriousNotesViewModel @Inject constructor(
         viewModelScope.launch {
             updateCuriousNoteUseCase.execute(note)
         }
-        selectAllCuriousNotes()
         clearFields()
     }
 
@@ -192,7 +177,6 @@ class CreateCuriousNotesViewModel @Inject constructor(
         setNoteDescription("")
         setNoteLink("")
         setIsUpdating(false)
-        setSheetValue(false)
         setShowSavingErrorValue(false)
     }
 
@@ -200,7 +184,6 @@ class CreateCuriousNotesViewModel @Inject constructor(
 
     fun editCuriote(curiousNote: CuriousNote) {
         setUpdatingCuriote(curiousNote)
-        setSheetValue(true)
         setIsUpdating(true)
         setDetailedExplanation(curiousNote.toCheck)
         curiousNote.title?.let { title -> setNoteTitle(title) }

@@ -29,6 +29,9 @@ class MainActivity : ComponentActivity() {
  * opening note on click (okno takie jak msg się otwiera okno w oknie, i tam przycisk edytuj)
  * notification:how many days it is not checked
  * kategorie:
- *
+ * colors to the category or item
+ * time limits to the item
+ * !!!!żeby zrobić dynamiczne(programatically) dodawanie linków, można zrobić lazy column,
+ * !!!!nasłuchujące na listę, której rozmiar będzie się zmieniał w zależności od kliknięcia w +
 
  */

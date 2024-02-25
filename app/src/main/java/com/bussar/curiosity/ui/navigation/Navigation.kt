@@ -24,7 +24,9 @@ fun MainNavigation() {
             //todo edit when new screen will be added
         }
         composable(route = NavItem.CreateCuriote.screenRoute) {
-            CreateCuriousNote(viewModel = hiltViewModel())
+            CreateCuriousNote(viewModel = hiltViewModel(), onSaved = {
+                navController.popBackStack()
+            })
         }
     }
 }

@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bussar.curiosity.R
 import com.bussar.curiosity.domain.model.CuriousNote
-import com.bussar.curiosity.ui.note.create.CreateCuriousNotesViewModel
 import com.bussar.curiosity.ui.theme.Dimens
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -35,7 +34,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CuriousNotesView(
-    viewModel: CreateCuriousNotesViewModel,
+    viewModel: CuriousNotesViewModel,
     onCreateCurioteClick: () -> Unit
 ) {
     val curiotes by viewModel.notes.collectAsStateWithLifecycle()
@@ -71,7 +70,9 @@ fun CuriousNotesView(
                     it.id
                 }
             ) { item: CuriousNote ->
-                CuriousNoteItem(curiousNote = item, onCurioteClick = viewModel::editCuriote)
+                CuriousNoteItem(curiousNote = item, onCurioteClick = {
+                    //todo viewModel::editCuriote
+                })
             }
         }
     }
