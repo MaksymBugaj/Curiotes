@@ -1,6 +1,5 @@
 package com.bussar.curiosity.ui.note.display
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bussar.curiosity.R
 import com.bussar.curiosity.domain.model.CuriousNote
-import com.bussar.curiosity.ui.note.create.CreateCuriousNote
-import com.bussar.curiosity.ui.note.create.CuriousNotesViewModel
 import com.bussar.curiosity.ui.theme.Dimens
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -38,6 +35,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CuriousNotesView(
     viewModel: CuriousNotesViewModel,
+    onCreateCurioteClick: () -> Unit
 ) {
     val curiotes by viewModel.notes.collectAsStateWithLifecycle()
 
@@ -46,9 +44,7 @@ fun CuriousNotesView(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    viewModel.setSheetValue(true)
-                },
+                onClick = onCreateCurioteClick,
             ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
@@ -74,11 +70,12 @@ fun CuriousNotesView(
                     it.id
                 }
             ) { item: CuriousNote ->
-                CuriousNoteItem(curiousNote = item, onCurioteClick = viewModel::editCuriote)
+                CuriousNoteItem(curiousNote = item, onCurioteClick = {
+                    //todo viewModel::editCuriote
+                })
             }
         }
     }
-    CreateCuriousNote(viewModel = viewModel)
 }
 
 @Composable
