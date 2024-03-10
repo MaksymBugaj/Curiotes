@@ -1,4 +1,4 @@
-package com.bussar.curiosity.ui.note.create
+package com.bussar.curiosity.ui.note.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,15 +30,15 @@ import com.bussar.curiosity.R
 import com.bussar.curiosity.ui.theme.Dimens
 
 @Composable
-fun CreateCuriousNote(
-    viewModel: CreateCuriousNotesViewModel,
+fun EditCuriousNote(
+    viewModel: EditCuriousNoteViewModel,
     onSaved: () -> Unit,
     curioteId: Long? = null
 ) {
     val showSavingError by viewModel.showCreateErrorTest.collectAsStateWithLifecycle(initialValue = false)
 
     curioteId?.let { viewModel.retrieveData(it) }
-    CreateCuriousNoteContent(
+    EditCuriousNoteContent(
         viewModel = viewModel,
         showError = showSavingError,
         onSaved = onSaved
@@ -59,8 +59,8 @@ fun ErrorToast(
 }
 
 @Composable
-fun CreateCuriousNoteContent(
-    viewModel: CreateCuriousNotesViewModel,
+fun EditCuriousNoteContent(
+    viewModel: EditCuriousNoteViewModel,
     showError: Boolean,
     onSaved: () -> Unit,
 ) {

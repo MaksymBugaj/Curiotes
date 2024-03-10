@@ -1,6 +1,7 @@
 package com.bussar.curiosity.di
 
 import com.bussar.curiosity.domain.usecase.SaveCuriousNoteUseCase
+import com.bussar.curiosity.domain.usecase.SelectCuriousNoteUseCase
 import com.bussar.curiosity.domain.usecase.SelectCuriousNotesUseCase
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -12,5 +13,7 @@ interface UseCaseModuleDependencies {
 
     fun exposeSaveCuriousNoteUseCase(): SaveCuriousNoteUseCase
 
-    fun exposeSelectCuriousNoteUseCase(): SelectCuriousNotesUseCase
+    fun exposeSelectCuriousNotesUseCase(): SelectCuriousNotesUseCase
+
+    fun exposeSelectCuriousNoteUseCase(): SelectCuriousNoteUseCase
 }

@@ -17,4 +17,8 @@ interface CuriousNoteDao : BaseDao<CuriousNoteEntity> {
     @Query("select * from curious_note")
     fun selectNotes(): Flow<List<CuriousNoteFull>>
 
+    @Transaction
+    @Query("select * from curious_note cn where cn.id =:id")
+    fun selectNote(id: Long): Flow<CuriousNoteFull>
+
 }

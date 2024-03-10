@@ -1,4 +1,4 @@
-package com.bussar.curiosity.ui.note.create
+package com.bussar.curiosity.ui.note.edit
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,6 @@ import com.bussar.curiosity.domain.model.CuriousNote
 import com.bussar.curiosity.domain.model.CuriousNoteLink
 import com.bussar.curiosity.domain.usecase.SaveCuriousNoteUseCase
 import com.bussar.curiosity.domain.usecase.SelectCuriousNoteUseCase
-import com.bussar.curiosity.domain.usecase.SelectCuriousNotesUseCase
 import com.bussar.curiosity.domain.usecase.UpdateCuriousNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,14 +21,11 @@ import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateCuriousNotesViewModel @Inject constructor(
+class EditCuriousNoteViewModel @Inject  constructor(
     private val saveCuriousNoteUseCase: SaveCuriousNoteUseCase,
     private val updateCuriousNoteUseCase: UpdateCuriousNoteUseCase,
     private val selectCuriousNoteUseCase: SelectCuriousNoteUseCase
-) : ViewModel() {
-
-    //todo change to multiple viewModels
-
+) : ViewModel(){
     private val _noteTitle = MutableStateFlow("")
     val noteTitle: StateFlow<String> = _noteTitle
 
@@ -49,11 +45,11 @@ class CreateCuriousNotesViewModel @Inject constructor(
     private val _isUpdating = MutableStateFlow(false)
     private var updatingCuriote: CuriousNote? = null
 
-     val showCreateErrorTest = combine(
+    val showCreateErrorTest = combine(
         _noteDescription, _noteLink, _noteTitle, _showSavingError
     ) { p1, p2,p3, p4 ->
-         if(!showSavingError.value) false
-         else p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4
+        if(!showSavingError.value) false
+        else p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(300), false)
 
     val enableSaveButton = combine(
@@ -124,10 +120,12 @@ class CreateCuriousNotesViewModel @Inject constructor(
 
     private fun save() {
         val links = if(_noteLink.value.isNotBlank()) {
-            listOf(CuriousNoteLink(
+            listOf(
+                CuriousNoteLink(
                 id = 0,
                 link = _noteLink.value
-            ))
+            )
+            )
         } else emptyList<CuriousNoteLink>()
         //todo delete
         Log.d("#NOPE","link to save: $links")
@@ -150,8 +148,8 @@ class CreateCuriousNotesViewModel @Inject constructor(
         val links = if(_noteLink.value.isNotEmpty() && curiousNote.links.isNullOrEmpty()){
             listOf(
                 CuriousNoteLink(
-                id = 0,
-                link = _noteLink.value
+                    id = 0,
+                    link = _noteLink.value
                 )
             )
         } else if (!curiousNote.links.isNullOrEmpty()){

@@ -37,6 +37,12 @@ class CuriousNoteRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun selectNote(id: Long): Flow<CuriousNote> {
+        return curiousNoteDao.selectNote(id).map {curiotes ->
+            curiousNoteMapper.mapToDomain(curiotes)
+        }
+    }
+
     override fun selectNotes(): Flow<List<CuriousNote>> {
         return curiousNoteDao.selectNotes().map { curiotes ->
             curiotes.map { curiote ->

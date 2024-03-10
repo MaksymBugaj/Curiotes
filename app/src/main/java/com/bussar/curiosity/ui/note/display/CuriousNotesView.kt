@@ -35,7 +35,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CuriousNotesView(
     viewModel: CuriousNotesViewModel,
-    onCreateCurioteClick: () -> Unit
+    onCreateCurioteClick: () -> Unit,
+    onCurioteClick: (id: Long) -> Unit
 ) {
     val curiotes by viewModel.notes.collectAsStateWithLifecycle()
 
@@ -71,7 +72,7 @@ fun CuriousNotesView(
                 }
             ) { item: CuriousNote ->
                 CuriousNoteItem(curiousNote = item, onCurioteClick = {
-                    //todo viewModel::editCuriote
+                    onCurioteClick(it.id)
                 })
             }
         }
